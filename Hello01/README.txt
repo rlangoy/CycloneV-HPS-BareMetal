@@ -52,17 +52,20 @@ hello01.bin has its entrypoint / start address at: 0x10000
         Hit any key to stop autoboot:   
      and stop it by pressing a key :)
 
- d) Upload the program hello01.bin  using 
-       loady 0x10000
-             Send the file hello01.bin using the y-modem protocol
-               Push ([Ctrl] + 'a') and then 'S' Select ymodem
-               And select the file hello01.bin (using space) and [enter]
-               (enter folders pushing space)         
-       Linux:
-             Stop screen by pushing ( [Ctrl] + 'a') and then 'k'
+ d)   Method 1:
+      Copy hello01.bin to the SD-Card (The FAT pratition)
+      in u-Boot enter:
+    	fatload mmc 0 0x10000 hello01.bin
  
- e)  Run the program using
-       go 0x10000
+      Method 2:
+       Upload the program hello01.bin over the serial line
+       In u-Boot enter:
+       	loady 0x10000
+             Send the file hello01.bin using the y-modem protocol
+ 
+ e)  Run the program
+       In u-Boot enter:
+       	go 0x10000
 
 Now you shold se 
        ## Starting application at 0x00010000 ...
