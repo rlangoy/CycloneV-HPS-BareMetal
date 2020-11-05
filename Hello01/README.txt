@@ -15,7 +15,7 @@ https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/cycl
 BUILD REQUIREMENTS
 ===================
 
-Build requirements for Ubuntu 20.04.1 (Olivia) (should work for most debian
+Build requirements for Ubuntu 20.04.1 (should work for most debian
 installation on x86 platfom)
 
 Install ARM Cross-Compiler:
