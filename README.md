@@ -7,7 +7,7 @@ The ARM CPU provided by the HPS (Hardware Process System) is programmed using UB
 
 Programs :
 .\Hello01 ->  Makes a .bin file that could be uploaded using u-Boot 
-               to the Ze and displays "Hello World" using the serial uart
+              and displays "Hello World" using the serial uart
 
 
 HW-DOC
