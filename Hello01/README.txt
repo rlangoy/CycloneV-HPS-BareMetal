@@ -2,7 +2,7 @@ Hello01
 ======================
 
 Makes a .bin file that could be uploaded using u-Boot 
-        to a CycloneV Soc board (ie DE0-Nano) and display Hello World  using the serial uart
+        to a CycloneV Soc board (ie DE0-NANO-SoC) and display Hello World  using the serial uart
 
 HW-DOC
 =======
