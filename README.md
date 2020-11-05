@@ -1,6 +1,9 @@
 # CycloneV-HPS-BareMetal
-This program shows to program the ARM CPU in the HPS (Hardware Process System) of an Cyclone-V SOC ie DE0-NANO board using UBOOT 
+Cyclone-V SOC bearbone ARM programming using U-BOOT
 
+The program are tested on a DE0-NANO-SoC board but should be working for all Intel Cyclone-V SOC's.
+The ARM CPU provided by the HPS (Hardware Process System) is programmed using UBOOT.
+(The U-Boot is a normaly provided by the Linux image provided in the software/doc of the development board.) 
 
 Programs :
 .\Hello01 ->  Makes a .bin file that could be uploaded using u-Boot 
