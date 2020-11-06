@@ -38,7 +38,7 @@ UPLOAD AND RUNNING USING U-BOOT
 hello01.bin has its entrypoint / start address at: 0x10000
 
  a) Connect the "DE0-Nano or other INTEL / Cyclon-V SOC"  UART (USB) to the Computer.
- b)  use a serial terminal program to comunicate width the ZedBoard's UART 
+ b)  use a serial terminal program to comunicate width the Dev-Board UART 
         Windows:  
          ExtraPuTTY http://www.extraputty.com/download.php
          or Tera Term http://hp.vector.co.jp/authors/VA002416/teraterm.html )
