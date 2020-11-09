@@ -1,8 +1,8 @@
-Hello01
+Blink
 ======================
+This is a program for the DE0-NANO-SoC borad programmed by the Blink/HW/my_soc.rbf
+To demonstate how to make a c-program that controls the LEDS by accessing the PIO module
 
-Makes a .bin file that could be uploaded using u-Boot 
-        to a CycloneV Soc board (ie DE0-NANO-SoC) and display Hello World  using the serial uart
 
 HW-DOC
 =======
@@ -29,7 +29,19 @@ Install ARM Cross-Compiler:
 BUILD 
 ======
 
-The hello01.bin file is compiled using make :)
+The blink.bin file is compiled using make :)
+
+
+Requirement's
+=============
+
+The ARM CPU provided by the HPS (Hardware Process System) is programmed using U-BOOT.
+The U-Boot is a normaly provided by the Linux image provided in the software/doc of the development board.
+For DE0-NANO-SoC:
+      Install the DE0-NANO-SoC Linux Image (with U-BOOT ) from http://download.terasic.com/downloads/cd-rom/de0-nano-soc/atlas/atlas_sdcard.zip
+      Unzip atlas_sdcard.zip
+      Install instruction for the .img file can be found at https://www.raspberrypi.org/documentation/installation/installing-images/
+
 
 
 UPLOAD AND RUNNING USING U-BOOT
@@ -39,7 +51,7 @@ hello01.bin has its entrypoint / start address at: 0x10000
 
  a) Connect the "DE0-Nano or other INTEL / Cyclon-V SOC"  UART (USB) to the Computer.
 
- b)  use a serial terminal program to comunicate width the Dev-Board UART
+ b) use a serial terminal program to comunicate width the Dev-Board UART
         Windows:
          ExtraPuTTY http://www.extraputty.com/download.php
          or Tera Term http://hp.vector.co.jp/authors/VA002416/teraterm.html )
@@ -49,9 +61,11 @@ hello01.bin has its entrypoint / start address at: 0x10000
               sudo apt-install minicom
               minicom -D/dev/ttyACM0 -b115200 -o
 
- b) stop U-Boot and 
+ c) Copy the FPGA-programming file Blink/HW/my_soc.rbf to the SD-Card
+
+ d) stop U-Boot and 
     1) Program the FPGA HW:
-          #Load FPGA my_soc.rbf from the SD-Card
+          #Load FPGA  from the SD-Card
           fatload mmc 0:1 ${fpgadata} my_soc.rbf;
           #Program FPGA
           fpga load 0 ${fpgadata} ${filesize};
