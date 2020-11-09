@@ -15,7 +15,7 @@ Programs :
               and displays "Hello World" using the serial uart
 
 (Only for DE0-NANO-Soc) Board
-.\Blink  ->  Makes a .bin file that acceses a output register that controls the DE0-SoC-Nano LEDS
+.\Blink\DE0-NANO-SoC  ->  Makes a .bin file that acceses a output register that controls the DE0-SoC-Nano LEDS
 
 
 HW-DOC
