@@ -11,62 +11,46 @@
     https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/cyclone-v/cv_54001.pdf
 */
 
-#pragma pack(1)
-#define UART0_BASE 0xFFC02000   //Page  3082
-//#define UART0_BASE 0xFF200000   //Page  3082
+#pragma pack(1)  // Byte align the memory in the compiler
+
+//Uart info se page 3082 in  section 22-1 in the Ref manual
+#define UART0_BASE        0xFFC02000
+#define RBR_THR_DLL_BASE  0x00
 #define UART0_RBR_THR_DLL ((unsigned int *) (UART0_BASE + 0x00)) // Multi-function register. That holds the  transmit data
 
-#define LW_FPGA_SLAVE_BASE 0xFF200000
-#define LEDS_OUT_REG ((unsigned int *) (LW_FPGA_SLAVE_BASE + 0x00))
+#define LW_HPS_FPGA_BRIDGE 0xFF200000  // The LWH2F (Light Weight Hardware to FPGA ) bridge  (Table 2-2 in section 2-16 in the Ref manual)
 
-//volatile unsigned int  * const TxRxUART0 = UART0_RBR_THR_DLL;
-//volatile unsigned int  * const FPGA_LED  = LEDS_OUT_REG;
+// Slave addresses is assigned in the Quartus Plaform Designes (QSYS)
+#define POI_LED_BASE       0x00000000  // Base address of the LED's I/O ports
+#define LEDS_OUT_REG ((unsigned int *) (LW_HPS_FPGA_BRIDGE + POI_LED_BASE))   // The address of the LED's
 
-unsigned int  * const TxRxUART0 = UART0_RBR_THR_DLL;
-unsigned int  * const FPGA_LED  = LEDS_OUT_REG;
-
-volatile unsigned char* slave_addr = (unsigned char*) 0xFF200000;  // the  offset of led_pio component in Qsys is 0x0 so it can be ignored
+unsigned int  * const TxRxUART0 = UART0_RBR_THR_DLL;   // Assign address to the UART Rx and Tx register from the ARM side
+unsigned int  * const FPGA_LED  = LEDS_OUT_REG;        // Assing address of the paralell I/O port connected to the LEDS from the ARM sidd
 
 
-
-void print_uart1(const char *s) 
+void print_uart1(const char *s)
 {
-    while(*s != '\0') 
+    while(*s != '\0')
     {     /* Loop until end of string */
 	 *TxRxUART0 = (unsigned int)(*s); /* Transmit char */
 	 s++; /* Next char */
     }
 }
 
-void write_led(const char ledValue)
+void write_led(char value)
 {
-  
-//  int volatile * const led_reg = (int *) 0xFF200000
-//  *led_reg=(int) 0x00;
+  *FPGA_LED=value;
 }
 
 
-void led_on()
+void all_leds_on()
 {
-//  write_led(0xff);
-//   unsigned int orgLedState=*FPGA_LED;
-//     *FPGA_LED_DDR = 0x000000ff;
-     *slave_addr    = (char) 0xff;
-
-//  volatile unsigned int * led_reg = (int *) 0xFF200000
-//  *led_reg=(unsigned volatile int) 0xff;
+  write_led(0xff);
 }
 
-void led_off()
+void all_leds_off()
 {
-// unsigned int orgLedState=*FPGA_LED;
-// *FPGA_LED=orgLedState & 0xffffff00;
-// write_led(0x00);slave_addr
-//   *FPGA_LED_DDR = (char *) 0xff;
-     *slave_addr     = (char) 0x00;
-//  volatile unsigned int * led_reg = (int *) 0xFF200000
-//  *led_reg=(unsigned volatile int) 0xff;
- 
+ write_led(0x00);
 }
 
 void delay()
@@ -80,11 +64,11 @@ void c_entry()
 {
   while(1)
   {
-   print_uart1("\r\nLed's On!");
-   led_on();
+   print_uart1("\r\nTurn all Led's On!");
+   all_leds_on();
    delay();
-   led_off();
-   print_uart1("\r\nLed's Off!");
+   all_leds_off();
+   print_uart1("\r\nTurn all Led's Off!");
    delay();
   }
 }
