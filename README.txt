@@ -2,12 +2,20 @@
 Cyclone-V SOC bearbone ARM programming using U-BOOT
 
 The program are tested on a DE0-NANO-SoC board but should be working for all Intel Cyclone-V SOC's.
-The ARM CPU provided by the HPS (Hardware Process System) is programmed using UBOOT.
-(The U-Boot is a normaly provided by the Linux image provided in the software/doc of the development board.) 
+The ARM CPU provided by the HPS (Hardware Process System) is programmed using U-BOOT.
+The U-Boot is a normaly provided by the Linux image provided in the software/doc of the development board.
+For DE0-NANO-SoC:
+      Install the DE0-NANO-SoC Linux Image (with U-BOOT ) from http://download.terasic.com/downloads/cd-rom/de0-nano-soc/atlas/atlas_sdcard.zip
+      Unzip atlas_sdcard.zip
+      Install instruction for the .img file can be found at https://www.raspberrypi.org/documentation/installation/installing-images/
+
 
 Programs :
 .\Hello01 ->  Makes a .bin file that could be uploaded using u-Boot 
               and displays "Hello World" using the serial uart
+
+(Only for DE0-NANO-Soc) Board
+.\Blink  ->  Makes a .bin file that acceses a output register that controls the DE0-SoC-Nano LEDS
 
 
 HW-DOC
