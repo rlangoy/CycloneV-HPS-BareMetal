@@ -37,7 +37,6 @@ module avs_mm_wraper(
            case (avs_address)
              8'h00 :   out_data=out_data+1;   // Incr val by 1 for each read
              8'h01 :   out_data=32'h55534E20;   // Display (USN)
-            default : out_data=out_data+1;   
           endcase
         end 
     end
