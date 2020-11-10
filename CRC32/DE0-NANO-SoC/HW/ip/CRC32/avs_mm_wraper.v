@@ -24,23 +24,24 @@ module avs_mm_wraper(
   //--- Internal Reg and fun
     reg [31:0] 	 out_data;
 
-    
+  //Reset chip on start up
   always @(posedge clk or posedge reset)
   begin
     if (reset) begin
       // Asynchronous reset when reset goes high
-       out_data = 32'h00000000;
-    end else begin
-      // Assign read_data
-      if( avs_read  )
-        begin
+       out_data  = 32'h00000000;
+       crc32_sum = 32'h00000000;            
+    end
+  end
+
+  //When Read signal is issued put out data
+  always @(posedge avs_read)
+  begin
            case (avs_address)
-             8'h00 :   out_data=out_data+1;   // Incr val by 1 for each read
+             8'h00   :   out_data=out_data+1;   // Incr val by 1 for each read
              8'h01   :   out_data=32'h204E5355;   // Display (USN)                        
              default :   out_data=32'h00000000;   // Display ZERO
-          endcase
-        end 
-    end
+          endcase    
   end
   
  // write data      
