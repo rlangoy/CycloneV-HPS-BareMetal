@@ -1,7 +1,7 @@
 // Design
 // Avalon memory interface
 module avs_mm_wraper( 
-  	         clk, // clock.clk
+             clk, // clock.clk
              reset, // reset.reset
 
              // Memory mapped read/write slave interface
@@ -30,7 +30,6 @@ module avs_mm_wraper(
     if (reset) begin
       // Asynchronous reset when reset goes high
        out_data  = 32'h00000000;
-       crc32_sum = 32'h00000000;            
     end
   end
 
