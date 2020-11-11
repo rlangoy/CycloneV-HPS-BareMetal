@@ -25,7 +25,7 @@ module avs_mm_crc32_wraper(
   reg [31:0] 	 out_data;
   reg [31:0] 	 crc32_sum;
   reg [7:0]      data;
-  reg [31:0]     out;
+  wire[31:0]     out;
 
   crc crc32(.crcIn(crc32_sum),.data(data),.crcOut(out));
 
