@@ -15,32 +15,27 @@ module avs_mm_wraper(
   input      clk;
   input      reset;
   // Memory mapped read/write slave interface
-  input [7:0]    avs_address;
+  input [7:0]     avs_address;
   input	  avs_read;
   input	  avs_write;
-  input  [31:0] avs_writedata;
+  input  [31:0]  avs_writedata;
   output [31:0]  avs_readdata;
   
   //--- Internal Reg and fun
-    reg [31:0] 	 out_data;
+  reg    [31:0]  out_data;
 
-  //Reset chip on start up
-  always @(posedge clk or posedge reset)
+    //When Read signal is issued put out data
+  always @(posedge avs_read or posedge reset)
   begin
-    if (reset) begin
-      // Asynchronous reset when reset goes high
-       out_data  = 32'h00000000;
-    end
-  end
 
-  //When Read signal is issued put out data
-  always @(posedge avs_read)
-  begin
-           case (avs_address)
-             8'h00   :   out_data=out_data+1;   // Incr val by 1 for each read
-             8'h01   :   out_data=32'h204E5355;   // Display (USN)                        
+    if (reset) // Asynchronous reset when reset goes high			
+	        out_data  = 32'h00000000;
+    else if(avs_read)             // if pos edge of read
+      case (avs_address)          //    decode address and execute
+             8'h00   :   out_data=out_data+1;     // Incr val by 1 for each read
+             8'h01   :   out_data=32'h204E5355;   // Display (USN)                    
              default :   out_data=32'h00000000;   // Display ZERO
-          endcase    
+        endcase    
   end
   
  // write data      
