@@ -20,22 +20,28 @@ module test;
                     .avs_writedata(writedata));
   
   
-    initial 
-    begin 
+
+  initial begin 
+      read  = 0;
       clk   = 0; 
       reset = 1;
+      address =8'b0;
       #1
       reset = 0; 
       #1
       read  = 1;
-      address =8'b0;
+      
     end 
 
   
     always  
-      #5  clk =  ! clk; 
+      #1  clk =  ! clk; 
+  	always
+      #10  read=  ! read; 
   	always
   	  #50  address= 8'h01;
+  	always
+  	  #80  address= 8'h02;
 
   
   
