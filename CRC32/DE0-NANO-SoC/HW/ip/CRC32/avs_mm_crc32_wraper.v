@@ -25,51 +25,50 @@ module avs_mm_crc32_wraper(
   reg [31:0] 	 out_data;
   reg [31:0] 	 crc32_sum;
   reg [7:0]      data;
-  wire[31:0]     out;
+  wire [31:0]     out;
   reg            rst;
   crc crc32(.crcIn(crc32_sum),.data(data),.crcOut(out));
 
-  // When Read signal is issued send out 
-  //     the CRC32-result
+  
+ 
+  //When Read signal is issued put out data
+  // Writes the CRC32-sum and out_data
   always @(posedge avs_read)
   begin
      //if ((avs_address == 8'h00) && (avs_read)) begin
-    if (avs_read) begin
-            //  decode address and execute 
-            out_data<=out;     
-    end //end addres 0x00
+    if (avs_read) 
+      case (avs_address )
+            8'h00 :   out_data = out;            
+        default   :   out_data = 8'hff;
+      endcase
+        
+             
   end
   
  
-  // Writes:
-  //    Update the CRC-sum and
-  //    Adds CRC32-data 
-  // Reset:
-  //  Clears the CRC32-data
-  //  Clears the CRC32-sum
+  // Writes the CRC32-data & crc32_sum
   always @ (posedge avs_write or posedge reset)
   begin
     if (reset)
       begin
-		  crc32_sum <= 32'h00000000; 
+		crc32_sum = 32'h00000000; 
         data =8'h00;
       end
     else if ( avs_write ) begin  
-       if (avs_address == 8'h00) 
-       begin
-			crc32_sum<=out;
-         data = avs_writedata & 8'hff;     // Write new data to calculate crc32       				
-       end
-    	else if (avs_address == 8'h01) 
-		begin
-			data =8'h00;
-			crc32_sum <= 32'h00000000;  
-        end
+      case (avs_address ) 
+       8'h00  : begin
+                  crc32_sum=out;
+                  data = avs_writedata & 8'hff;     // Write new data to calculate crc32       				
+       			end
+       8'h01   : begin 
+			   	   crc32_sum = 32'h00000000;  	
+          	       data =8'h00;			
+                 end        
+      endcase
   	end
 	 
   end // end write 
   
-
   
  // write data from reg to outport     
   assign avs_readdata = out_data;
@@ -117,4 +116,3 @@ module crc (crcIn, data, crcOut);
 	assign crcOut[30] = (crcIn[0] ^ crcIn[1] ^ crcIn[6] ^ crcIn[7] ^ data[0] ^ data[1] ^ data[6] ^ data[7]);
 	assign crcOut[31] = (crcIn[1] ^ crcIn[7] ^ data[1] ^ data[7]);
 endmodule
-
