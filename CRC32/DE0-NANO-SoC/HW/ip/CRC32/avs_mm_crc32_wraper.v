@@ -26,39 +26,50 @@ module avs_mm_crc32_wraper(
   reg [31:0] 	 crc32_sum;
   reg [7:0]      data;
   wire[31:0]     out;
-
+  reg            rst;
   crc crc32(.crcIn(crc32_sum),.data(data),.crcOut(out));
 
-   //When Read signal is issued put out data
-  always @(posedge avs_read or posedge reset or posedge avs_write)
+  // When Read signal is issued send out 
+  //     the CRC32-result
+  always @(posedge avs_read)
   begin
-
-    if (reset) // Asynchronous reset when reset goes high			
+     //if ((avs_address == 8'h00) && (avs_read)) begin
+    if (avs_read) begin
+            //  decode address and execute 
+            out_data<=out;     
+    end //end addres 0x00
+  end
+  
+ 
+  // Writes:
+  //    Update the CRC-sum and
+  //    Adds CRC32-data 
+  // Reset:
+  //  Clears the CRC32-data
+  //  Clears the CRC32-sum
+  always @ (posedge avs_write or posedge reset)
+  begin
+    if (reset)
       begin
-	        out_data  = 32'h00000000;
-    		crc32_sum = 32'h00000000;
+		  crc32_sum <= 32'h00000000; 
+        data =8'h00;
       end
-    else if(avs_read)             // if pos edge of read
-      begin
-        if (avs_address == 8'h00) begin
-          //    decode address and execute        
-                            out_data=out;     // Incr val by 1 for each read
-                            crc32_sum=out;
-         end
-      end         
-  end
-  
-  always @(posedge avs_write)
-  begin
-	    if (avs_address == 8'h00)          
-            data = avs_writedata & 8'hff;     // Write new data to calculate crc32       
-    	if (avs_address == 8'h01) 
-        begin
-            crc32_sum = avs_writedata ;       // Reset / New crc32_sum   
-    		data=8'h00;
+    else if ( avs_write ) begin  
+       if (avs_address == 8'h00) 
+       begin
+			crc32_sum<=out;
+         data = avs_writedata & 8'hff;     // Write new data to calculate crc32       				
+       end
+    	else if (avs_address == 8'h01) 
+		begin
+			data =8'h00;
+			crc32_sum <= 32'h00000000;  
         end
+  	end
+	 
+  end // end write 
   
-  end
+
   
  // write data from reg to outport     
   assign avs_readdata = out_data;
@@ -106,3 +117,4 @@ module crc (crcIn, data, crcOut);
 	assign crcOut[30] = (crcIn[0] ^ crcIn[1] ^ crcIn[6] ^ crcIn[7] ^ data[0] ^ data[1] ^ data[6] ^ data[7]);
 	assign crcOut[31] = (crcIn[1] ^ crcIn[7] ^ data[1] ^ data[7]);
 endmodule
+
