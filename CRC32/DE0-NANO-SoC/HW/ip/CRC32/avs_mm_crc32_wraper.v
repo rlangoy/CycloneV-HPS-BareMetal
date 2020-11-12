@@ -50,8 +50,13 @@ module avs_mm_crc32_wraper(
   
   always @(posedge avs_write)
   begin
-	     if (avs_address == 8'h00)          //    decode address and execute
-            data = avs_writedata & 8'hff;          
+	    if (avs_address == 8'h00)          
+            data = avs_writedata & 8'hff;     // Write new data to calculate crc32       
+    	if (avs_address == 8'h01) 
+        begin
+            crc32_sum = avs_writedata ;       // Reset / New crc32_sum   
+    		data=8'h00;
+        end
   
   end
   
