@@ -26,12 +26,78 @@ module test;
       clk   = 0; 
       reset = 1;
       write=0;
-      address =8'b0;
+      address =8'h00;
+      #1
+      reset = 1; 
       #1
       reset = 0; 
+      read  = 1;  
       #1
-      writedata= 8'h1;
+      read  = 0;    
+      address =8'h00;
+      writedata= 8'h01;
       write=1;
+      #1
+      write=0;
+      address =8'h00;
+      read  = 1;  
+    
+      #1
+      read  = 0;    
+      writedata= 8'h01;
+      write=1;
+      address =8'b0;
+
+      #1
+      write=0;
+      read  = 1;  
+    
+      #1
+      read  = 0;    
+      writedata= 8'h01;
+      write=1;
+      address =8'h01;
+
+      #1
+      write=0;
+      read  = 1;  
+      address =8'h00;
+
+    
+      #1
+      read  = 0;    
+      writedata= 8'h01;
+      write=1;
+      address =8'h00;
+
+      #1
+      write=0;
+      read  = 1;  
+      address =8'h00;
+
+
+          #1
+      read  = 0;    
+      writedata= 8'h01;
+      write=1;
+      address =8'h00;
+
+      #1
+      write=0;
+      read  = 1;  
+      address =8'h00;
+
+       #1
+      read  = 0;    
+      writedata= 8'h01;
+      write=1;
+      address =8'h00;
+
+      #1
+      write=0;
+      read  = 1;  
+      address =8'h00;
+
     
    	   
     end 
@@ -39,21 +105,12 @@ module test;
   
     always  
       #1  clk =  ! clk; 
-   always
-      #10  read=  ! read; 
-   always
-     #10  write=  ! write; 
-
-  	always
-  	  #50  writedata= 8'h2;
-  	always
-  	  #80  address= 8'h02;
 
   
   
   initial  begin
-    $display("\t\ttime,\tclk,\treset,\tread\twrite\taddress\treaddatat"); 
-    $monitor("%d,\t%b,\t%b,\t%b,\t0x%h,\t0x%h,\t0x%h",$time, clk,reset,read,write,address,readdata); 
+    $display("\t\ttime,\tclk,\treset,\tread\twrite\taddress\\twriteData\treaddatat"); 
+    $monitor("%d,\t%b,\t%b,\t%b,\t%b,\t0x%h,\t0x%h,\t0x%h",$time, clk,reset,read,write,address,writedata,readdata); 
     end 
    
   initial 
