@@ -14,6 +14,11 @@ Programs :
 .\Hello01 ->  Makes a .bin file that could be uploaded using u-Boot 
               and displays "Hello World" using the serial uart
 
+.\MemMap  ->  Implementation of an custom verilog code that demonstrating the "Avalon memory mapping"
+
+.\CRC32   ->  Implementation of "Avalon memory mapped" CRC32 - ip from https://bues.ch/cms/hacking/crcgen (https://github.com/mbuesch/crcgen)
+
+
 (Only for DE0-NANO-Soc) Board
 .\Blink\DE0-NANO-SoC  ->  Makes a .bin file that acceses a output register that controls the DE0-SoC-Nano LEDS
 
