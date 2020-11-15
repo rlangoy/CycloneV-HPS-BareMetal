@@ -1,3 +1,30 @@
+
+/*
+This is a implementation of "Avalon memory mapped" CRC32 
+The crc module is grenerated using the site: https://bues.ch/cms/hacking/crcgen 
+#
+# Licence
+#############
+# This code is Public Domain.
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+# SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+# RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+# NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+# USE OR PERFORMANCE OF THIS SOFTWARE.
+
+# Poly in hex form: 0x04 C1 1D B7
+# CRC polynomial coefficients: x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1
+# Hexadecimal, reversed representation: 0xED B8 83 20 (hex)  
+# CRC width:                   32 bits
+# CRC shift direction:         right
+# OUTPUT Xor 0xffffffff
+*/
+
 // Design
 // Avalon memory interface
 module avs_mm_crc32_wraper( 
@@ -26,11 +53,9 @@ module avs_mm_crc32_wraper(
   reg [31:0] 	 crc32_sum;
   reg [7:0]      data;
   wire [31:0]     out;
-  reg            rst;
+  reg             rst;
   crc crc32(.crcIn(crc32_sum),.data(data),.crcOut(out));
 
-  
- 
   //When Read signal is issued put out data
   // Writes the CRC32-sum and out_data
   always @(posedge avs_read)
@@ -38,11 +63,9 @@ module avs_mm_crc32_wraper(
      //if ((avs_address == 8'h00) && (avs_read)) begin
     if (avs_read) 
       case (avs_address )
-            8'h00 :   out_data = out;            
+        8'h00     :   out_data = out;             
         default   :   out_data = 8'hff;
-      endcase
-        
-             
+      endcase                     
   end
   
  
@@ -51,19 +74,24 @@ module avs_mm_crc32_wraper(
   begin
     if (reset)
       begin
-		crc32_sum = 32'h00000000; 
-        data =8'h00;
+        rst=1;         // Flag reset crc32 sum
       end
     else if ( avs_write ) begin  
       case (avs_address ) 
-       8'h00  : begin
-                  crc32_sum=out;
+       8'h00  : begin  // Set CRC32-Sum and new input data
+        	      
+         		  // If reset initiate CRC32 SUM
+         		  if(rst) begin 
+                    	rst=0; 
+                        crc32_sum=32'hffffffff;  //CRC32 Init
+                  end else  
+                    	crc32_sum=out;
+         
                   data = avs_writedata & 8'hff;     // Write new data to calculate crc32       				
        			end
-       8'h01   : begin 
-			   	   crc32_sum = 32'h00000000;  	
-          	       data =8'h00;			
-                 end        
+        //Writing to address 0x01 -> CRC32 RESET (set's crc32_sum to 0xffffffff when adding new data)
+        8'h01  : rst=1; 			
+                      
       endcase
   	end
 	 
@@ -71,12 +99,9 @@ module avs_mm_crc32_wraper(
   
   
  // write data from reg to outport     
-  assign avs_readdata = out_data;
+  assign avs_readdata = ~out_data;  // Output is CRC32 sum inverted
 
 endmodule
-
-
-
 
 module crc (crcIn, data, crcOut);
 	input [31:0] crcIn;
